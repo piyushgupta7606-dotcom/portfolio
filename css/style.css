@@ -1,0 +1,571 @@
+/* =========================================================
+   Piyush Kumar Gupta — Portfolio
+   Pure CSS. No JavaScript. Dark + minimal + red accent.
+   ========================================================= */
+
+/* ---------- 1. Design tokens (change colours here) ---------- */
+:root {
+  --bg: #0a0a0a;
+  --surface: #131313;
+  --line: #262626;
+  --text: #ededed;
+  --muted: #9a9a9a;
+  --dim: #5c5c5c;
+  --red: #e5383b;
+  --red-deep: #b3131b;
+
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, "Courier New", monospace;
+
+  --maxw: 1100px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---------- 2. Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: dark; scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--red); color: #fff; }
+
+/* Background: faint circuit-style grid that fades out */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.35;
+  -webkit-mask-image: radial-gradient(ellipse at 70% 0%, #000 0%, transparent 70%);
+          mask-image: radial-gradient(ellipse at 70% 0%, #000 0%, transparent 70%);
+}
+
+/* Background: slow-moving red glow */
+body::after {
+  content: "";
+  position: fixed;
+  top: -250px;
+  right: -200px;
+  width: 650px;
+  height: 650px;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(229, 56, 59, 0.16), transparent 62%);
+  animation: drift 16s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes drift {
+  to { translate: -180px 160px; }
+}
+
+/* ---------- 3. Page transitions (Chrome/Edge when served over http) ---------- */
+@view-transition { navigation: auto; }
+
+/* ---------- 4. Header + navigation ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(10, 10, 10, 0.72);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  view-transition-name: site-header; /* header stays still while pages swap */
+}
+
+.nav-wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav ul {
+  display: flex;
+  gap: 0.15rem;
+  list-style: none;
+}
+
+.nav a {
+  position: relative;
+  display: block;
+  padding: 0.4rem 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.25s;
+}
+
+/* red underline that draws in on hover */
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.2rem;
+  height: 1px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--ease);
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] { color: var(--text); }
+
+.nav a:hover::after,
+.nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- 5. Layout ---------- */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 5rem 1.5rem 5rem;
+}
+
+/* ---------- 6. Typography ---------- */
+h1 {
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.accent { color: var(--red); }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--red);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 1.1rem;
+}
+
+.lead {
+  color: var(--muted);
+  font-size: 1.1rem;
+  max-width: 62ch;
+  margin-top: 1.4rem;
+}
+
+.prose p {
+  color: var(--muted);
+  max-width: 68ch;
+  margin-top: 1.1rem;
+  font-size: 1.05rem;
+}
+.prose strong { color: var(--text); font-weight: 600; }
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin-top: 5rem;
+}
+.section-title .num {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--dim);
+}
+
+/* ---------- 7. Load animations ---------- */
+/* Add class="reveal" and style="--i:2" to stagger elements on page load */
+.reveal {
+  animation: rise 0.9s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+
+@keyframes rise {
+  from { opacity: 0; translate: 0 26px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* Cards animate in as you scroll (supported browsers only — otherwise just visible) */
+@supports (animation-timeline: view()) {
+  .scroll-reveal {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+}
+
+/* ---------- 8. Home: hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  align-items: center;
+  gap: 3rem;
+  min-height: calc(100vh - 260px);
+}
+
+/* typewriter line — width in "ch" must equal the number of characters (35) */
+.typed {
+  display: inline-block;
+  margin-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: clamp(0.82rem, 2.2vw, 1.05rem);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--red);
+  width: 35ch;
+  animation:
+    typing 2.2s steps(35) 0.7s both,
+    blink 0.85s step-end infinite;
+}
+
+@keyframes typing { from { width: 0; } to { width: 35ch; } }
+@keyframes blink  { 50% { border-color: transparent; } }
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.4rem;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin-top: 4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  list-style: none;
+}
+.status li::before { content: "▹ "; color: var(--red); }
+
+/* ---------- 9. Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.8rem 1.45rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: border-color 0.25s, background-color 0.25s, transform 0.25s var(--ease);
+}
+.btn:hover { border-color: var(--text); transform: translateY(-2px); }
+
+.btn-primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn-primary:hover { background: var(--red-deep); border-color: var(--red-deep); }
+
+.btn .arrow { transition: transform 0.25s var(--ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* ---------- 10. Home: CSS-only IC chip graphic ---------- */
+.chip-stage {
+  display: grid;
+  place-items: center;
+  padding: 2.5rem;
+}
+
+.chip {
+  position: relative;
+  width: min(250px, 70vw);
+  aspect-ratio: 1;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  50% { translate: 0 -14px; }
+}
+
+/* pins = striped bars sticking out behind the chip body */
+.pins { position: absolute; }
+.pins-v {
+  inset: -18px 14%;
+  background: repeating-linear-gradient(90deg, #4a4a4a 0 7px, transparent 7px 21px);
+}
+.pins-h {
+  inset: 14% -18px;
+  background: repeating-linear-gradient(0deg, #4a4a4a 0 7px, transparent 7px 21px);
+}
+
+.die {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid #333;
+  background: linear-gradient(145deg, #1c1c1c, #0c0c0c);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 70px rgba(229, 56, 59, 0.14);
+}
+
+/* pin-1 marker */
+.die::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.core {
+  position: relative;
+  width: 46%;
+  aspect-ratio: 1;
+  border: 1px solid #353535;
+  border-radius: 6px;
+  background-image:
+    linear-gradient(#262626 1px, transparent 1px),
+    linear-gradient(90deg, #262626 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+/* glowing pulse in the middle of the core */
+.core::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(229, 56, 59, 0.55); }
+  100% { box-shadow: 0 0 0 34px rgba(229, 56, 59, 0); }
+}
+
+.chip-label {
+  position: absolute;
+  bottom: 14px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+}
+
+/* ---------- 11. Cards ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.2rem;
+}
+
+.card {
+  position: relative;
+  padding: 1.8rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease), border-color 0.35s;
+}
+
+/* red line that sweeps across the top on hover */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
+}
+
+.card:hover { transform: translateY(-5px); border-color: #3a3a3a; }
+.card:hover::before { transform: scaleX(1); }
+
+.card .num {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--dim);
+  margin-bottom: 1.1rem;
+}
+.card h3 { margin-bottom: 0.55rem; }
+.card p { color: var(--muted); }
+
+.card.ghost {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  background: transparent;
+  border-style: dashed;
+  text-align: center;
+}
+.card.ghost p { font-family: var(--mono); font-size: 0.85rem; }
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.3rem;
+  list-style: none;
+}
+.tags li {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  transition: border-color 0.25s, color 0.25s;
+}
+.card:hover .tags li { border-color: #3a3a3a; color: var(--text); }
+
+/* ---------- 12. Timeline ---------- */
+.timeline {
+  list-style: none;
+  margin-top: 2.2rem;
+  margin-left: 5px;
+  padding-left: 2rem;
+  border-left: 1px solid var(--line);
+}
+.timeline li { position: relative; padding-bottom: 2.6rem; }
+.timeline li:last-child { padding-bottom: 0.5rem; }
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: calc(-2rem - 6px);
+  top: 0.4rem;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--red);
+}
+
+.timeline .when {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--red);
+  letter-spacing: 0.08em;
+}
+.timeline h3 { margin: 0.3rem 0 0.35rem; }
+.timeline p { color: var(--muted); max-width: 60ch; }
+
+/* ---------- 13. Stat block ---------- */
+.stat {
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.stat small { font-size: 0.4em; color: var(--red); }
+
+/* ---------- 14. Contact ---------- */
+.mail-link {
+  display: inline-block;
+  margin-top: 2.5rem;
+  font-size: clamp(1.3rem, 4.6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  background-image: linear-gradient(var(--red), var(--red));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 3px;
+  transition: background-size 0.5s var(--ease), color 0.3s;
+}
+.mail-link:hover { background-size: 100% 3px; }
+
+/* ---------- 15. Footer ---------- */
+.site-footer { border-top: 1px solid var(--line); }
+.footer-wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.6rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--dim);
+}
+.footer-wrap a { color: var(--muted); text-decoration: none; }
+.footer-wrap a:hover { color: var(--red); }
+
+/* ---------- 16. Responsive ---------- */
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 1rem; min-height: auto; }
+  .chip-stage { order: -1; padding: 1.5rem 0 1rem; }
+  .chip { width: 150px; }
+}
+
+@media (max-width: 720px) {
+  .nav-wrap { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+  .nav { width: 100%; }
+  .nav ul { gap: 0; flex-wrap: wrap; margin-left: -0.6rem; }
+  .nav a { padding: 0.35rem 0.6rem; font-size: 0.85rem; white-space: nowrap; }
+  main { padding: 3rem 1.25rem 4rem; }
+  .section-title { margin-top: 3.5rem; }
+}
+
+/* ---------- 17. Accessibility: respect "reduce motion" ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .typed { width: auto; border-right: 0; }
+}
